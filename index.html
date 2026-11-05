@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computing Fundamentals - Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #2c3e50;
+            --primary-color: #1a5276;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --card-bg: #ffffff;
+            --border-color: #dce1e3;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --primary-color: #5dade2;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .arabic-text {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+            max-width: 1200px;
+        }
+
+        /* Sidebar Nav */
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .theme-toggle {
+            margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Study Section */
+        .study-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .study-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .original-text {
+            background: rgba(41, 128, 185, 0.1);
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .translation-text {
+            background: rgba(39, 174, 96, 0.1);
+            padding: 15px;
+            border-right: 4px solid var(--success-color);
+            margin-bottom: 20px;
+            border-radius: 4px;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .explanation-text {
+            background: rgba(230, 126, 34, 0.1);
+            padding: 15px;
+            border-right: 4px solid #e67e22;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .study-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: inherit;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            margin: 0 auto 30px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .flashcard-back .arabic-text {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #ecf0f1;
+        }
+
+        /* Summary */
+        .summary-list {
+            list-style: none;
+        }
+
+        .summary-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .summary-item .arabic-text {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+
+        /* Exam */
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .options-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .option-item {
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option-item:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .option-item.selected {
+            background-color: rgba(41, 128, 185, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .option-item.correct {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-color: var(--success-color);
+        }
+
+        .option-item.wrong {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-box.success {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--success-color);
+        }
+
+        .feedback-box.error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--accent-color);
+        }
+
+        .feedback-box h4 {
+            margin-bottom: 10px;
+        }
+
+        /* Results */
+        .result-card {
+            text-align: center;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">Computing Fundamentals</div>
+        <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+        <div class="nav-item" onclick="showSection('study')">📖 Study Part</div>
+        <div class="nav-item" onclick="showSection('flashcards')">🗂️ Flashcards</div>
+        <div class="nav-item" onclick="showSection('summary')">📝 Summary</div>
+        <div class="nav-item" onclick="showSection('exam')">🎯 Final Exam</div>
+        <div class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <h2>Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-progress-text">0%</div>
+                    <div class="stat-label">Study Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-parts-text">0 / 14</div>
+                    <div class="stat-label">Parts Studied</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-flash-text">0 / 20</div>
+                    <div class="stat-label">Flashcards Reviewed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-exam-text">--</div>
+                    <div class="stat-label">Final Exam Score</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="dash-progress-bar"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="continueLearning()">Continue Learning</button>
+            </div>
+        </section>
+
+        <!-- Study Section -->
+        <section id="study" class="section">
+            <div class="exam-header">
+                <h2>Study & Explanation</h2>
+                <span id="part-indicator" style="font-weight: bold;">Part 1 of 14</span>
+            </div>
+            
+            <div class="study-card">
+                <h3 id="study-title">Part Title</h3>
+                
+                <div class="original-text" id="study-original">
+                    English Text here.
+                </div>
+                
+                <div class="translation-text arabic-text" id="study-translation">
+                    النص العربي هنا.
+                </div>
+                
+                <div class="explanation-text arabic-text" id="study-explanation">
+                    الشرح المبسط هنا.
+                </div>
+            </div>
+
+            <div class="study-controls">
+                <button class="btn btn-outline" id="btn-prev-part" onclick="changePart(-1)">Previous Part</button>
+                <button class="btn" id="btn-next-part" onclick="changePart(1)">Next Part</button>
+            </div>
+        </section>
+
+        <!-- Flashcards Section -->
+        <section id="flashcards" class="section">
+            <div class="exam-header">
+                <h2>Flashcards</h2>
+                <span id="flash-indicator" style="font-weight: bold;">Card 1 of 20</span>
+            </div>
+
+            <div class="flashcard-container" onclick="flipCard()">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-front">
+                        <h3 id="flash-question">Question here</h3>
+                        <p style="margin-top: 20px; color: var(--secondary-color); font-size: 0.9rem;">(Click to flip)</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <div id="flash-answer-en" style="font-size: 1.1rem; margin-bottom: 15px;">Answer English</div>
+                        <div id="flash-answer-ar" class="arabic-text">Answer Arabic</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="changeCard(-1)">Previous</button>
+                <button class="btn btn-outline" onclick="shuffleCards()">Shuffle</button>
+                <button class="btn btn-secondary" onclick="markReviewed()">Mark as Reviewed</button>
+                <button class="btn" onclick="changeCard(1)">Next</button>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary" class="section">
+            <h2>Chapter Summary (20 Points)</h2>
+            <ul class="summary-list" id="summary-list">
+                <!-- Generated via JS -->
+            </ul>
+        </section>
+
+        <!-- Exam Section -->
+        <section id="exam" class="section">
+            <div class="exam-header">
+                <h2>Final Exam</h2>
+                <span id="exam-progress-text" style="font-weight: bold;">Question 1 of 60</span>
+            </div>
+
+            <div class="question-card" id="question-card">
+                <h3 id="exam-question" style="margin-bottom: 15px;">Question text</h3>
+                <div id="exam-question-ar" class="arabic-text" style="color: var(--secondary-color); margin-bottom: 20px;">ترجمة السؤال</div>
+                
+                <ul class="options-list" id="exam-options">
+                    <!-- Options generated via JS -->
+                </ul>
+
+                <div class="feedback-box" id="exam-feedback">
+                    <h4 id="feedback-title"></h4>
+                    <p id="feedback-explanation-en"></p>
+                    <p id="feedback-explanation-ar" class="arabic-text"></p>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn" id="btn-confirm" onclick="confirmAnswer()">Confirm Answer</button>
+                    <button class="btn btn-secondary" id="btn-next-q" onclick="nextQuestion()" style="display: none;">Next Question</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="section">
+            <div class="result-card">
+                <h2>Exam Results</h2>
+                <div class="score-circle" id="result-score">0/60</div>
+                <h3 id="result-percentage">0%</h3>
+                <p id="result-status" style="margin: 15px 0; font-size: 1.2rem; font-weight: bold;"></p>
+                <p id="result-breakdown"></p>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                    <button class="btn btn-outline" onclick="reviewWrongAnswers()">Review Wrong Answers</button>
+                    <button class="btn" onclick="restartExam()">Retake Exam</button>
+                </div>
+            </div>
+            
+            <div id="review-section" style="display: none; margin-top: 30px;">
+                <h3>Review Wrong Answers</h3>
+                <div id="wrong-answers-list"></div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    // --- DATA ---
+    const studyData = [
+        {
+            title: "1. Core Characteristics of a Computer",
+            original: "Computers have 8 core characteristics: Speed, Accuracy, Diligence, Versatility, Storage Capacity, Automation, Reliability, and Multitasking. Speed means they process data very quickly. Accuracy depends on correct data and instructions (GIGO). Diligence means they don't get tired. Versatility means they can perform different tasks. Storage Capacity means they store large amounts of data. Automation means they execute instructions automatically once a program is given. Reliability means consistent results. Multitasking means performing many tasks at the same time.",
+            translation: "تتمتع أجهزة الكمبيوتر بـ 8 خصائص أساسية: السرعة، الدقة، الاجتهاد، التنوع، سعة التخزين، الأتمتة، الموثوقية، وتعدد المهام. السرعة تعني معالجة البيانات بسرعة كبيرة. الدقة تعتمد على صحة البيانات والتعليمات (GIGO - إذا أدخلت قمامة ستحصل على قمامة). الاجتهاد يعني أنها لا تتعب. التنوع يعني القدرة على أداء مهام مختلفة. سعة التخزين تعني تخزين كميات كبيرة من البيانات. الأتمتة تعني تنفيذ التعليمات تلقائياً بمجرد إعطاء البرنامج. الموثوقية تعني نتائج متسقة. تعدد المهام يعني أداء مهام متعددة في نفس الوقت.",
+            explanation: "الجزء ده بيشرح مميزات الكمبيوتر. أهم حاجة تركز عليها هي GIGO (Garbage In, Garbage Out) لأن دي بتبين إن الكمبيوتر دقيق بس لو الكلام اللي بندخله صح. كمان السرعة والاجتهاد (مش بيتعب زي الإنسان) وتعدد المهام هما اللي بيميزوه عن البشر."
+        },
+        {
+            title: "2. Limitations of Computers",
+            original: "Despite their capabilities, computers have limitations. A computer can only perform tasks according to the instructions provided to it. A computer does not perform useful work without appropriate instructions or programs. Therefore, the computer’s results depend on: The instructions provided, The data supplied, The software used, The way the system is designed and operated.",
+            translation: "على الرغم من قدراتها، فإن لأجهزة الكمبيوتر قيوداً. يمكن للكمبيوتر أداء المهام فقط وفقاً للتعليمات المقدمة له. لا يقوم الكمبيوتر بعمل مفيد بدون تعليمات أو برامج مناسبة. لذلك، تعتمد نتائج الكمبيوتر على: التعليمات المقدمة، البيانات المقدمة، البرمجيات المستخدمة، طريقة تصميم وتشغيل النظام.",
+            explanation: "الكمبيوتر مش ذكي من نفسه، هو مجرد آلة بتنفذ الأوامر. لو مديتلوش تعليمات صح أو بيانات صح هتطلع نتيجة غلط. عشان كده النتيجة بتعتمد على 4 حاجات: التعليمات، البيانات، السوفتوير، وتصميم النظام."
+        },
+        {
+            title: "3. Introduction to Computer Hardware",
+            original: "Computer hardware consists of the physical components that make up a computer system. These components work together to receive data, process instructions, store information, and produce output. Among the most important hardware components are the Central Processing Unit (CPU), memory, storage devices, and input and output devices. Understanding these components is essential for understanding how a computer system operates.",
+            translation: "يتكون العتاد (الهاردوير) من المكونات المادية التي تشكل نظام الكمبيوتر. تعمل هذه المكونات معاً لاستقبال البيانات، معالجة التعليمات، تخزين المعلومات، وإنتاج المخرجات. من أهم مكونات العتاد: وحدة المعالجة المركزية (CPU)، الذاكرة، أجهزة التخزين، وأجهزة الإدخال والإخراج. فهم هذه المكونات ضروري لفهم كيفية عمل نظام الكمبيوتر.",
+            explanation: "الهاردوير هو أي حاجة بنشوفها ونلمسها في الكمبيوتر. المكونات الأساسية هي المعالج (اللي بيشتغل)، الذاكرة (اللي بتحفظ مؤقتاً)، التخزين (اللي بيحفظ دائم)، وأجهزة الإدخال والإخراج (زي الكيبورد والشاشة)."
+        },
+        {
+            title: "4. Central Processing Unit (CPU)",
+            original: "The CPU is often described as the 'brain of the computer' because it interprets and executes instructions and coordinates many activities performed by the computer system. It is responsible for: Executing program instructions, Performing calculations, Processing data, Controlling the overall operation of the computer. The CPU works closely with main memory (RAM) and other hardware components during program execution.",
+            translation: "غالباً ما توصف وحدة المعالجة المركزية (CPU) بأنها 'عقل الكمبيوتر' لأنها تفسر وتنفذ التعليمات وتنسق العديد من الأنشطة التي يقوم بها نظام الكمبيوتر. وهي مسؤولة عن: تنفيذ تعليمات البرنامج، إجراء العمليات الحسابية، معالجة البيانات، التحكم في التشغيل العام للكمبيوتر. تعمل CPU عن كثب مع الذاكرة الرئيسية (RAM) ومكونات العتاد الأخرى أثناء تنفيذ البرنامج.",
+            explanation: "المعالج هو المخ بتاع الكمبيوتر. شغلته الأساسية إنه ينفذ الأوامر، يحسب، يعالج البيانات، ويتحكم في كل حاجة في الجهاز."
+        },
+        {
+            title: "5. Control Unit (CU) & Components",
+            original: "The main components of a CPU include: Control Unit (CU), Arithmetic and Logic Unit (ALU), Registers. Modern CPUs also contain Cache memory, CPU clock, and Internal and external buses. The Control Unit (CU) is responsible for coordinating and controlling the activities involved in executing instructions. It determines the order in which instructions are processed.",
+            translation: "تشمل المكونات الرئيسية لوحدة المعالجة المركزية: وحدة التحكم (CU)، وحدة الحساب والمنطق (ALU)، السجلات. تحتوي وحدات المعالجة المركزية الحديثة أيضاً على ذاكرة التخزين المؤقت، ساعة المعالج، والنواقل الداخلية والخارجية. وحدة التحكم (CU) مسؤولة عن تنسيق والتحكم في الأنشطة المتعلقة بتنفيذ التعليمات. وهي تحدد الترتيب الذي تتم به معالجة التعليمات.",
+            explanation: "المعالج بيتكون من 3 أجزاء أساسية: CU (اللي بيوجه ويحكم)، ALU (اللي بيحسب)، و Registers (الذاكرة الصغيرة جداً جواه). المعالجات الحديثة فيها كمان كاش ومذبذب (ساعة)."
+        },
+        {
+            title: "6. Control Unit Functions & ALU",
+            original: "Functions of CU: Controls sequence of instructions, Coordinates CPU components, Fetches instructions, Decodes instructions, Obtains required data, Directs the ALU, Controls output of results. The ALU performs arithmetic operations (Addition, Subtraction, Multiplication, Division) and logical operations (Equal to, Greater than, Less than, AND, OR, NOT).",
+            translation: "وظائف وحدة التحكم: التحكم في تسلسل التعليمات، تنسيق مكونات المعالج، جلب التعليمات، فك تشفير التعليمات، الحصول على البيانات المطلوبة، توجيه وحدة الحساب والمنطق، التحكم في إخراج النتائج. تقوم وحدة الحساب والمنطق (ALU) بإجراء العمليات الحسابية (الجمع، الطرح، الضرب، القسمة) والعمليات المنطقية (يساوي، أكبر من، أصغر من، AND، OR، NOT).",
+            explanation: "الـ CU هو المدير اللي بيجيب الأوامر ويفكها ويوجه الباقي. الـ ALU هو الموظف اللي بيعمل الحسابات (جمع وطرح) والمقارنات المنطقية (أكبر من، أصغر من)."
+        },
+        {
+            title: "7. Registers (MAR, PC, MDR)",
+            original: "Registers are very small and very fast storage locations located inside the CPU. They temporarily store information that the CPU is currently processing. 1. Memory Address Register (MAR): Stores the address of the memory location being accessed. 2. Program Counter (PC): Stores the memory address of the next instruction to be executed. 3. Memory Data Register (MDR): Temporarily holds data or instructions being transferred between the CPU and main memory.",
+            translation: "السجلات هي مواقع تخزين صغيرة جداً وسريعة جداً موجودة داخل وحدة المعالجة المركزية. تقوم بتخزين المعلومات التي تعالجها وحدة المعالجة المركزية حالياً بشكل مؤقت. 1. سجل عنوان الذاكرة (MAR): يخزن عنوان موقع الذاكرة الذي يتم الوصول إليه. 2. عداد البرنامج (PC): يخزن عنوان الذاكرة للتعليمة التالية التي سيتم تنفيذها. 3. سجل بيانات الذاكرة (MDR): يحتفظ مؤقتاً بالبيانات أو التعليمات التي يتم نقلها بين وحدة المعالجة المركزية والذاكرة الرئيسية.",
+            explanation: "السجلات دي زي الجيوب الصغيرة جوه المعالج. MAR بيشيل عنوان الحاجة في الرام. PC بيشيل عنوان الأمر اللي جاي. MDR بيشيل البيانات نفسها اللي بتتنقل من وإلى الرام."
+        },
+        {
+            title: "8. Cache Memory",
+            original: "Cache memory is a small and very fast type of memory associated with the CPU. It temporarily stores data and instructions that the CPU may need again. If the required information is available in the cache, the CPU can access it more quickly than accessing main memory. This reduces the time required to access the information and can improve overall system performance.",
+            translation: "ذاكرة التخزين المؤقت (Cache) هي نوع صغير جداً وسريع من الذاكرة المرتبطة بوحدة المعالجة المركزية. تقوم بتخزين البيانات والتعليمات التي قد تحتاجها وحدة المعالجة المركزية مرة أخرى بشكل مؤقت. إذا كانت المعلومات المطلوبة متاحة في ذاكرة التخزين المؤقت، يمكن لوحدة المعالجة المركزية الوصول إليها بشكل أسرع من الوصول إلى الذاكرة الرئيسية. هذا يقلل من الوقت اللازم للوصول إلى المعلومات ويمكن أن يحسن أداء النظام العام.",
+            explanation: "الكاش دي ذاكرة صغيرة وسريعة جداً جوه أو جنب المعالج. بتشيل البيانات اللي المعالج بيستخدمها كتير عشان ميروحش للرام (اللي أبطأ) كل مرة. دي بتسرع الجهاز جداً."
+        },
+        {
+            title: "9. CPU Clock and Clock Speed",
+            original: "The CPU uses a timing signal called the clock signal to control and synchronize its internal activities. The basic unit of this timing process is called a Clock Cycle. The clock does not perform calculations. It provides timing signals that coordinate the operations of the CPU. A clock cycle is one basic timing interval of the CPU clock used to synchronize processor operations.",
+            translation: "تستخدم وحدة المعالجة المركزية إشارة توقيت تسمى إشارة الساعة للتحكم في أنشطتها الداخلية ومزامنتها. تسمى الوحدة الأساسية لعملية التوقيت هذه بدورة الساعة (Clock Cycle). الساعة لا تقوم بإجراء حسابات. إنها توفر إشارات توقيت تنسق عمليات وحدة المعالجة المركزية. دورة الساعة هي فترة توقيت أساسية واحدة لساعة وحدة المعالجة المركزية تستخدم لمزامنة عمليات المعالج.",
+            explanation: "المعالج محتاج ينظم وقته عشان كل حاجة تمشي صح. الساعة (Clock) هي اللي بتديله الإيقاع (تك تك تك). كل تكه دي اسمها Clock Cycle. الساعة مش بتحسب، هي بس بتنظم."
+        },
+        {
+            title: "10. Instruction Cycle & Pipelining",
+            original: "An instruction cycle is the process through which the CPU handles an instruction. The basic stages are: Fetch, Decode, Execute, Write Back. One Clock Cycle is not necessarily equal to one Instruction. Modern processors use a technique called Pipelining to improve instruction throughput, allowing the CPU to overlap the execution stages of multiple instructions.",
+            translation: "دورة التعليمات هي العملية التي تتعامل بها وحدة المعالجة المركزية مع التعليمة. المراحل الأساسية هي: الجلب (Fetch)، فك التشفير (Decode)، التنفيذ (Execute)، الكتابة مرة أخرى (Write Back). دورة ساعة واحدة لا تساوي بالضرورة تعليمة واحدة. تستخدم المعالجات الحديثة تقنية تسمى 'التدفق' (Pipelining) لتحسين إنتاجية التعليمات، مما يسمح لوحدة المعالجة المركزية بتداخل مراحل تنفيذ تعليمات متعددة.",
+            explanation: "المعالج عشان ينفذ أمر بيمر بـ 4 مراحل (يجيبه، يفك شفرته، ينفذه، يحفظ النتيجة). دورة الساعة مش شرط تكون أمر كامل. تقنية الـ Pipelining بتخلي المعالج يشتغل على أكتر من أمر في نفس الوقت زي خط الإنتاج."
+        },
+        {
+            title: "11. Primary Memory (RAM & ROM)",
+            original: "Primary memory, also known as main memory, is the memory directly accessed by the CPU. Primary memory mainly includes: RAM and ROM. RAM is volatile, temporary storage for active programs and data. ROM is non-volatile, stores firmware and essential instructions like boot instructions.",
+            translation: "الذاكرة الرئيسية هي الذاكرة التي يتم الوصول إليها مباشرة من قبل وحدة المعالجة المركزية. تشمل الذاكرة الرئيسية بشكل أساسي: RAM و ROM. ذاكرة الوصول العشوائي (RAM) متطايرة (تفقد بياناتها عند إيقاف التشغيل)، وتخزين مؤقت للبرامج والبيانات النشطة. ذاكرة القراءة فقط (ROM) غير متطايرة، وتخزن البرامج الثابتة والتعليمات الأساسية مثل تعليمات التمهيد.",
+            explanation: "الذاكرة الأساسية نوعين: RAM و ROM. الـ RAM هي الذاكرة اللي بتشتغل عليها دلوقتي، لو قفلت الجهاز البيانات بتتمسح (Volatile). الـ ROM هي اللي فيها أوامر التشغيل الأساسية وبيفضل فيها البيانات حتى لو الجهاز مقفول (Non-volatile)."
+        },
+        {
+            title: "12. Secondary Storage (HDD, SSD, Optical)",
+            original: "Secondary storage is used to store data, programs, and files for long-term use. It is generally non-volatile. Examples: HDD (magnetic, moving parts, slower), SSD (flash memory, no moving parts, faster), Optical Disks (CD 700MB, DVD 4.7GB, Blu-ray 25GB/50GB).",
+            translation: "يستخدم التخزين الثانوي لتخزين البيانات والبرامج والملفات للاستخدام طويل الأمد. وهو عادة غير متطاير. أمثلة: محرك الأقراص الصلبة (HDD - مغناطيسي، به أجزاء متحركة، أبطأ)، محرك الأقراص الصلبة (SSD - ذاكرة فلاش، بدون أجزاء متحركة، أسرع)، الأقراص الضوئية (CD 700 ميجابايت، DVD 4.7 جيجابايت، Blu-ray 25/50 جيجابايت).",
+            explanation: "التخزين الثانوي ده اللي بنحفظ فيه ملفاتنا بشكل دائم. الـ HDD قديم وبطيء وفيه أجزاء بتتحرك. الـ SSD حديث وسريع ومفيهوش أجزاء بتتحرك. الأقراص الضوئية زي الـ CD والـ DVD والـ Blu-ray بتتقرأ بالليزر."
+        },
+        {
+            title: "13. Comparisons (RAM vs ROM, HDD vs SSD, Primary vs Secondary)",
+            original: "RAM is volatile, temporary, fast, modifiable. ROM is non-volatile, long-term, generally slower, limited modification. Primary memory is smaller, faster, directly accessed by CPU. Secondary storage is larger, slower, non-volatile. HDD uses magnetic tech, has moving parts, slower, cheaper per GB. SSD uses flash memory, no moving parts, faster, more expensive per GB.",
+            translation: "RAM متطايرة، مؤقتة، سريعة، قابلة للتعديل. ROM غير متطايرة، طويلة الأمد، عادة أبطأ، تعديل محدود. الذاكرة الرئيسية أصغر، أسرع، يتم الوصول إليها مباشرة من قبل CPU. التخزين الثانوي أكبر، أبطأ، غير متطاير. HDD يستخدم التكنولوجيا المغناطيسية، به أجزاء متحركة، أبطأ، أرخص لكل جيجابايت. SSD يستخدم ذاكرة فلاش، بدون أجزاء متحركة، أسرع، أغلى لكل جيجابايت.",
+            explanation: "دي أهم مقارنات في الفصل. RAM سريعة وبتمسح، ROM بطيئة وبتحفظ. الذاكرة الأساسية سريعة وصغيرة، التخزين الثانوي بطيء وكبير. الـ SSD أسرع وأغلى من الـ HDD ومفيهوش أجزاء بتتحرك."
+        },
+        {
+            title: "14. System Relationship & Application",
+            original: "The CPU, memory, and storage work together. Simplified process: Secondary Storage -> RAM -> CPU -> Output. When you open an app, it loads from storage into RAM, the CPU processes it, and results are outputted. When buying a computer, consider CPU (cores, speed), RAM (for multitasking), Storage (SSD for speed), GPU (for AI/gaming), Display, Battery, and Connectivity.",
+            translation: "تعمل وحدة المعالجة المركزية والذاكرة والتخزين معاً. العملية المبسطة: التخزين الثانوي -> RAM -> CPU -> الإخراج. عندما تفتح تطبيقاً، فإنه يتم تحميله من التخزين إلى RAM، ويعالجه CPU، ويتم إخراج النتائج. عند شراء جهاز كمبيوتر، ضع في اعتبارك CPU (الأنوية، السرعة)، RAM (لتعدد المهام)، التخزين (SSD للسرعة)، GPU (للذكاء الاصطناعي/الألعاب)، الشاشة، البطارية، والاتصال.",
+            explanation: "كل حاجة في الكمبيوتر بتشتغل مع بعض. البرنامج بيتحمل من الهارد (التخزين) للرام، المعالج بيشتغل عليه، والنتيجة بتظهرلك. لما تشتري لابتوب ركز على المعالج والرام وهارد SSD، ولو بتشتغل في الذكاء الاصطناعي أو الألعاب هتحتاج كارت شاشة (GPU) قوي."
+        }
+    ];
+
+    const flashcardsData = [
+        { q: "List and briefly explain the 8 core characteristics of a computer.", a_en: "Speed, Accuracy, Diligence, Versatility, Storage Capacity, Automation, Reliability, and Multitasking.", a_ar: "السرعة، الدقة، الاجتهاد، التنوع، سعة التخزين، الأتمتة، الموثوقية، وتعدد المهام." },
+        { q: "What does GIGO stand for and what does it mean in the context of computer accuracy?", a_en: "Garbage In, Garbage Out. It means a computer produces accurate results only if the input data and instructions are correct.", a_ar: "إذا أدخلت قمامة ستحصل على قمامة. يعني الكمبيوتر بيطلع نتيجة دقيقة بس لو البيانات والتعليمات اللي دخلتها صح." },
+        { q: "Explain why computers have limitations despite their high capabilities.", a_en: "Computers cannot think for themselves; they only perform tasks according to provided instructions, data, software, and system design.", a_ar: "لأن الكمبيوتر مش بيفكر لوحده، هو بس بينفذ التعليمات والبيانات والسوفتوير وتصميم النظام اللي بيتم توفيره." },
+        { q: "What are the four main hardware components mentioned in the chapter?", a_en: "CPU, Memory, Storage devices, and Input/Output devices.", a_ar: "المعالج، الذاكرة، أجهزة التخزين، وأجهزة الإدخال والإخراج." },
+        { q: "Why is the CPU described as the 'brain of the computer'?", a_en: "Because it interprets and executes instructions, performs calculations, processes data, and controls overall operations.", a_ar: "لأنه بيفسر وينفذ التعليمات، بيعمل حسابات، بيعالج البيانات، وبيتحكم في التشغيل العام للكمبيوتر." },
+        { q: "What are the three main components of a CPU?", a_en: "Control Unit (CU), Arithmetic and Logic Unit (ALU), and Registers.", a_ar: "وحدة التحكم، وحدة الحساب والمنطق، والسجلات." },
+        { q: "List three functions of the Control Unit (CU).", a_en: "Fetches instructions, decodes instructions, and directs the ALU (among others like coordinating components).", a_ar: "جلب التعليمات، فك تشفير التعليمات، وتوجيه وحدة الحساب والمنطق." },
+        { q: "Differentiate between Arithmetic operations and Logical operations in the ALU.", a_en: "Arithmetic operations include addition, subtraction, multiplication, division. Logical operations involve comparisons like AND, OR, NOT, greater than, less than.", a_ar: "العمليات الحسابية بتشمل الجمع والطرح والضرب والقسمة. العمليات المنطقية بتشمل المقارنات زي AND و OR و NOT وأكبر من وأصغر من." },
+        { q: "What is the difference between MAR and MDR?", a_en: "MAR stores the address of the memory location being accessed. MDR holds the actual data or instructions being transferred to/from memory.", a_ar: "MAR بيشيل عنوان المكان في الذاكرة اللي بنوصله. MDR بيشيل البيانات أو التعليمات نفسها اللي بتتنقل من وإلى الذاكرة." },
+        { q: "What is the function of the Program Counter (PC)?", a_en: "It stores the memory address of the next instruction to be executed.", a_ar: "بيشيل عنوان الذاكرة للتعليمة التالية اللي هتتنفذ." },
+        { q: "Why is Cache memory important for system performance?", a_en: "It stores frequently used data and instructions, allowing the CPU to access them much faster than main memory (RAM).", a_ar: "لأنها بتشيل البيانات والتعليمات اللي بتتستخدم كتير، وبتخلي المعالج يوصلها أسرع بكتير من الرام." },
+        { q: "What is a Clock Cycle?", a_en: "One basic timing interval of the CPU clock used to synchronize processor operations.", a_ar: "فترة توقيت أساسية واحدة لساعة المعالج بتستخدم لمزامنة العمليات." },
+        { q: "Does a higher clock speed always mean a faster CPU? Why?", a_en: "No. Performance also depends on CPU Architecture, IPC (Instructions Per Cycle), number of cores, cache, and pipeline design.", a_ar: "لا. الأداء بيعتمد كمان على هندسة المعالج، عدد التعليمات في الدورة، عدد الأنوية، الكاش، وتصميم الـ Pipeline." },
+        { q: "What are the 4 stages of the Instruction Cycle?", a_en: "Fetch, Decode, Execute, Write Back.", a_ar: "الجلب، فك التشفير، التنفيذ، والكتابة مرة أخرى." },
+        { q: "Explain Pipelining in modern CPUs.", a_en: "It's a technique that allows different instructions to occupy different execution stages at the same time, improving throughput.", a_ar: "تقنية بتسمح لتعليمات مختلفة إنها تكون في مراحل تنفيذ مختلفة في نفس الوقت، وده بيحسن الإنتاجية." },
+        { q: "Compare RAM and ROM in terms of volatility and purpose.", a_en: "RAM is volatile (loses data when off) and stores active data temporarily. ROM is non-volatile (retains data) and stores firmware/boot instructions.", a_ar: "الرام متطايرة (بتفقد بياناتها) وبتشيل البيانات النشطة مؤقتاً. الروم غير متطايرة (بتحفظ بياناتها) وبتشيل الفيرموير وتعليمات التمهيد." },
+        { q: "What is the main difference between Primary Memory and Secondary Storage?", a_en: "Primary memory is directly accessed by the CPU and is faster (e.g., RAM). Secondary storage is for long-term use, slower, and accessed via I/O (e.g., SSD, HDD).", a_ar: "الذاكرة الأساسية بيوصلها المعالج مباشرة وأسرع (زي الرام). التخزين الثانوي للاستخدام طويل الأمد وأبطأ وبيتم الوصول له عن طريق الإدخال/الإخراج (زي الهارد والسوليد ستيت)." },
+        { q: "What are the key differences between HDD and SSD?", a_en: "HDD uses magnetic technology with moving parts, is slower and cheaper. SSD uses flash memory with no moving parts, is faster and more expensive.", a_ar: "الـ HDD بيستخدم تكنولوجيا مغناطيسية وفيه أجزاء بتتحرك، أبطأ وأرخص. الـ SSD بيستخدم ذاكرة فلاش ومفيهوش أجزاء بتتحرك، أسرع وأغلى." },
+        { q: "How do CPU, RAM, and Storage work together when opening an application?", a_en: "The app is loaded from secondary storage into RAM, then the CPU accesses and executes it, outputting results.", a_ar: "التطبيق بيتحمل من التخزين الثانوي للرام، وبعدين المعالج بيوصله وينفذه، وتظهر النتائج." },
+        { q: "What specifications should you prioritize when buying a computer for Computer Science?", a_en: "Strong CPU (cores/speed), sufficient RAM for multitasking, SSD for fast storage, and a dedicated GPU if doing AI/graphics, plus good display and battery.", a_ar: "معالج قوي، رام كافية لتعدد المهام، هارد SSD سريع، وكارت شاشة مخصص لو بتشتغل في الذكاء الاصطناعي أو الجرافيك، مع شاشة وبطارية كويسين." }
+    ];
+
+    const summaryData = [
+        { en: "Computers have 8 core characteristics: Speed, Accuracy, Diligence, Versatility, Storage, Automation, Reliability, and Multitasking.", ar: "أجهزة الكمبيوتر لها 8 خصائص أساسية: السرعة، الدقة، الاجتهاد، التنوع، التخزين، الأتمتة، الموثوقية، وتعدد المهام." },
+        { en: "Computer accuracy depends on the input data (GIGO: Garbage In, Garbage Out).", ar: "دقة الكمبيوتر تعتمد على البيانات المدخلة (إذا أدخلت قمامة ستحصل على قمامة)." },
+        { en: "Limitations of computers mean their results depend on instructions, data, software, and system design.", ar: "قيود الكمبيوتر تعني أن نتائجه تعتمد على التعليمات، البيانات، البرمجيات، وتصميم النظام." },
+        { en: "Computer Hardware includes physical components like CPU, memory, storage, and I/O devices.", ar: "العتاد يشمل المكونات المادية مثل المعالج، الذاكرة، التخزين، وأجهزة الإدخال والإخراج." },
+        { en: "The CPU is the 'brain' responsible for executing instructions, processing data, and controlling operations.", ar: "المعالج هو 'العقل' المسؤول عن تنفيذ التعليمات، معالجة البيانات، والتحكم في العمليات." },
+        { en: "The CPU's main components are the Control Unit (CU), Arithmetic Logic Unit (ALU), and Registers.", ar: "المكونات الرئيسية للمعالج هي وحدة التحكم، وحدة الحساب والمنطق، والسجلات." },
+        { en: "The CU coordinates activities, fetches/decodes instructions, and directs the ALU.", ar: "وحدة التحكم تنسق الأنشطة، تجلب وتفك تشفير التعليمات، وتوجه وحدة الحساب والمنطق." },
+        { en: "The ALU performs arithmetic (math) and logical (comparisons) operations.", ar: "وحدة الحساب والمنطق تقوم بالعمليات الحسابية (الرياضية) والمنطقية (المقارنات)." },
+        { en: "Registers are ultra-fast temporary storage inside the CPU (MAR, PC, MDR).", ar: "السجلات هي ذاكرة مؤقتة فائقة السرعة داخل المعالج." },
+        { en: "MAR stores the address being accessed; PC stores the address of the next instruction; MDR holds transferred data.", ar: "MAR يخزن العنوان الذي يتم الوصول إليه، PC يخزن عنوان التعليمة التالية، MDR يحمل البيانات المنقولة." },
+        { en: "Cache memory is small, very fast memory that stores frequently accessed data to speed up the CPU.", ar: "ذاكرة الكاش صغيرة وسريعة جداً وتخزن البيانات المتكررة لتسريع المعالج." },
+        { en: "The CPU Clock synchronizes operations; a Clock Cycle is one basic timing interval.", ar: "ساعة المعالج تزامن العمليات؛ دورة الساعة هي فترة توقيت أساسية واحدة." },
+        { en: "Higher clock speed doesn't always mean faster CPU; architecture, cores, and IPC also matter.", ar: "سرعة الساعة العالية لا تعني دائماً معالجاً أسرع؛ الهندسة والأنوية وعدد التعليمات مهمة أيضاً." },
+        { en: "The Instruction Cycle consists of Fetch, Decode, Execute, and Write Back.", ar: "دورة التعليمات تتكون من الجلب، فك التشفير، التنفيذ، والكتابة مرة أخرى." },
+        { en: "Pipelining allows overlapping of instruction stages to improve throughput.", ar: "تقنية التدفق (Pipelining) تسمح بتداخل مراحل التعليمات لتحسين الإنتاجية." },
+        { en: "Primary Memory (RAM & ROM) is directly accessed by the CPU.", ar: "الذاكرة الرئيسية (RAM و ROM) يتم الوصول إليها مباشرة من قبل المعالج." },
+        { en: "RAM is volatile, fast, and temporary. ROM is non-volatile, stores firmware/boot instructions.", ar: "الرام متطايرة وسريعة ومؤقتة. الروم غير متطايرة وتخزن الفيرموير وتعليمات التمهيد." },
+        { en: "Secondary Storage (HDD, SSD, Optical) is non-volatile for long-term use and larger capacity.", ar: "التخزين الثانوي (HDD، SSD، الأقراص الضوئية) غير متطاير للاستخدام طويل الأمد وسعته أكبر." },
+        { en: "HDDs use magnetic moving parts (slower, cheaper). SSDs use flash memory (faster, expensive).", ar: "الـ HDD يستخدم أجزاء مغناطيسية متحركة (أبطأ، أرخص). الـ SSD يستخدم ذاكرة فلاش (أسرع، أغلى)." },
+        { en: "Data flows from Secondary Storage -> RAM -> CPU -> Output device during execution.", ar: "تتدفق البيانات من التخزين الثانوي -> الرام -> المعالج -> جهاز الإخراج أثناء التنفيذ." }
+    ];
+
+    // 60 Questions Exam
+    const examData = [
+        { type: "mcq", q: "Which characteristic refers to a computer's ability to perform millions of operations per second?", opts: ["Accuracy", "Diligence", "Speed", "Versatility"], ans: 2, exp_en: "Speed means computers can process data very quickly.", exp_ar: "السرعة تعني أن الكمبيوتر يعالج البيانات بسرعة فائقة." },
+        { type: "mcq", q: "What does GIGO stand for?", opts: ["Good Input Good Output", "Garbage In Garbage Out", "General Input General Output", "Great Input Great Output"], ans: 1, exp_en: "GIGO means Accuracy depends on correct data and instructions.", exp_ar: "GIGO تعني أن الدقة تعتمد على البيانات والتعليمات الصحيحة." },
+        { type: "tf", q: "Computers get tired and bored after performing repetitive tasks.", opts: ["True", "False"], ans: 1, exp_en: "False. Diligence means they do not get tired or bored.", exp_ar: "خطأ. الاجتهاد يعني أنها لا تتعب ولا تشعر بالملل." },
+        { type: "mcq", q: "Which of the following is NOT a limitation of computers?", opts: ["They need instructions", "They depend on data supplied", "They can process millions of operations per second", "They need appropriate software"], ans: 2, exp_en: "Processing millions of operations is a characteristic (Speed), not a limitation.", exp_ar: "معالجة ملايين العمليات هي خاصية (السرعة)، وليست قيداً." },
+        { type: "mcq", q: "What are the physical components of a computer system called?", opts: ["Software", "Firmware", "Hardware", "Malware"], ans: 2, exp_en: "Hardware refers to the physical components that can be seen and touched.", exp_ar: "العتاد يشير إلى المكونات المادية التي يمكن رؤيتها ولمسها." },
+        { type: "mcq", q: "Which component is often described as the 'brain of the computer'?", opts: ["RAM", "Hard Drive", "CPU", "GPU"], ans: 2, exp_en: "The CPU interprets and executes instructions, coordinating activities.", exp_ar: "المعالج يفسر وينفذ التعليمات وينسق الأنشطة." },
+        { type: "mcq", q: "Which part of the CPU performs calculations and logical comparisons?", opts: ["Control Unit (CU)", "Arithmetic and Logic Unit (ALU)", "Registers", "Cache"], ans: 1, exp_en: "The ALU is responsible for arithmetic and logical operations.", exp_ar: "وحدة الحساب والمنطق مسؤولة عن العمليات الحسابية والمنطقية." },
+        { type: "mcq", q: "Which component fetches and decodes instructions?", opts: ["ALU", "Control Unit (CU)", "MDR", "RAM"], ans: 1, exp_en: "The Control Unit fetches and decodes instructions and directs other parts.", exp_ar: "وحدة التحكم تجلب وتفك تشفير التعليمات وتوجه الأجزاء الأخرى." },
+        { type: "tf", q: "Registers are very slow storage locations outside the CPU.", opts: ["True", "False"], ans: 1, exp_en: "False. Registers are very small, very fast storage inside the CPU.", exp_ar: "خطأ. السجلات صغيرة جداً وسريعة جداً وتوجد داخل المعالج." },
+        { type: "mcq", q: "Which register stores the address of the next instruction to be executed?", opts: ["MAR", "MDR", "PC", "ACC"], ans: 2, exp_en: "The Program Counter (PC) stores the address of the next instruction.", exp_ar: "عداد البرنامج (PC) يخزن عنوان التعليمة التالية." },
+        { type: "mcq", q: "Which register holds data or instructions transferred between CPU and main memory?", opts: ["MAR", "MDR", "PC", "CU"], ans: 1, exp_en: "MDR holds data or instructions being transferred to or from memory.", exp_ar: "MDR يحمل البيانات أو التعليمات التي يتم نقلها من أو إلى الذاكرة." },
+        { type: "mcq", q: "What is the main purpose of Cache memory?", opts: ["To store files permanently", "To provide faster access to frequently used data", "To process graphics", "To cool down the CPU"], ans: 1, exp_en: "Cache temporarily stores frequently accessed data for faster CPU access.", exp_ar: "الكاش يخزن البيانات المتكررة مؤقتاً لوصول أسرع للمعالج." },
+        { type: "tf", q: "The CPU clock performs the calculations.", opts: ["True", "False"], ans: 1, exp_en: "False. The clock provides timing signals, it does not perform calculations.", exp_ar: "خطأ. الساعة توفر إشارات توقيت، ولا تقوم بالحسابات." },
+        { type: "mcq", q: "What is a Clock Cycle?", opts: ["The time to execute one full program", "One basic timing interval of the CPU clock", "The time to open an app", "The number of cores in a CPU"], ans: 1, exp_en: "A clock cycle is one basic timing interval used to synchronize operations.", exp_ar: "دورة الساعة هي فترة توقيت أساسية واحدة تستخدم لمزامنة العمليات." },
+        { type: "mcq", q: "Which of the following is NOT a stage of the Instruction Cycle?", opts: ["Fetch", "Decode", "Compile", "Execute"], ans: 2, exp_en: "The stages are Fetch, Decode, Execute, Write Back. Compile is not a CPU stage.", exp_ar: "المراحل هي الجلب، فك التشفير، التنفيذ، الكتابة. الترجمة (Compile) ليست مرحلة في المعالج." },
+        { type: "mcq", q: "What technique allows overlapping stages of multiple instructions to improve throughput?", opts: ["Multitasking", "Caching", "Pipelining", "Virtual Memory"], ans: 2, exp_en: "Pipelining allows different instructions to occupy different stages simultaneously.", exp_ar: "تقنية التدفق تسمح لتعليمات مختلفة أن تشغل مراحل مختلفة في نفس الوقت." },
+        { type: "tf", q: "A 4 GHz CPU is always faster than a 3 GHz CPU in every task.", opts: ["True", "False"], ans: 1, exp_en: "False. Architecture, IPC, cores, and cache also play a major role.", exp_ar: "خطأ. الهندسة، عدد التعليمات، الأنوية، والكاش تلعب دوراً كبيراً أيضاً." },
+        { type: "mcq", q: "Which type of memory is volatile and stores active programs?", opts: ["ROM", "RAM", "SSD", "HDD"], ans: 1, exp_en: "RAM is volatile and stores data currently being processed.", exp_ar: "الرام متطايرة وتخزن البيانات التي تتم معالجتها حالياً." },
+        { type: "mcq", q: "Which type of memory is non-volatile and stores firmware?", opts: ["RAM", "Cache", "ROM", "Registers"], ans: 2, exp_en: "ROM is non-volatile and stores firmware and boot instructions.", exp_ar: "الروم غير متطايرة وتخزن الفيرموير وتعليمات التمهيد." },
+        { type: "tf", q: "ROM contents are normally lost when the computer is turned off.", opts: ["True", "False"], ans: 1, exp_en: "False. ROM is non-volatile and retains data when power is off.", exp_ar: "خطأ. الروم غير متطايرة وتحتفظ بالبيانات عند إيقاف التشغيل." },
+        { type: "mcq", q: "Which of the following is an example of Secondary Storage?", opts: ["RAM", "ROM", "SSD", "Cache"], ans: 2, exp_en: "SSD is a secondary storage device for long-term use.", exp_ar: "الـ SSD هو جهاز تخزين ثانوي للاستخدام طويل الأمد." },
+        { type: "mcq", q: "Which storage technology uses magnetic technology and has moving parts?", opts: ["SSD", "HDD", "Flash Drive", "RAM"], ans: 1, exp_en: "HDD uses magnetic storage and contains moving mechanical parts.", exp_ar: "الـ HDD يستخدم التخزين المغناطيسي ويحتوي على أجزاء ميكانيكية متحركة." },
+        { type: "tf", q: "SSDs are generally slower and cheaper per GB than HDDs.", opts: ["True", "False"], ans: 1, exp_en: "False. SSDs are faster and more expensive per GB than HDDs.", exp_ar: "خطأ. الـ SSD أسرع وأغلى لكل جيجابايت من الـ HDD." },
+        { type: "mcq", q: "How much data can a standard CD store approximately?", opts: ["700 MB", "4.7 GB", "25 GB", "1 TB"], ans: 0, exp_en: "A CD can store approximately 700 MB.", exp_ar: "يمكن للـ CD تخزين حوالي 700 ميجابايت." },
+        { type: "mcq", q: "What technology do Blu-ray discs use to read/write data?", opts: ["Red laser", "Blue-violet laser", "Magnetic heads", "Flash memory"], ans: 1, exp_en: "Blu-ray discs use a blue-violet laser, offering higher capacity.", exp_ar: "أقراص Blu-ray تستخدم ليزر أزرق-بنفسجي، مما يوفر سعة أعلى." },
+        { type: "mcq", q: "In the data flow, where is a program loaded before the CPU executes it?", opts: ["Directly from HDD to CPU", "From HDD to RAM", "From RAM to Cache", "From ROM to ALU"], ans: 1, exp_en: "Programs are loaded from secondary storage (HDD/SSD) into RAM.", exp_ar: "يتم تحميل البرامج من التخزين الثانوي إلى الرام." },
+        { type: "mcq", q: "Which of the following is true about Primary Memory vs Secondary Storage?", opts: ["Primary is larger and slower", "Secondary is directly accessed by CPU", "Primary is generally faster", "Secondary is volatile"], ans: 2, exp_en: "Primary memory is generally faster and directly accessed by the CPU.", exp_ar: "الذاكرة الرئيسية عادة أسرع ويتم الوصول إليها مباشرة من قبل المعالج." },
+        { type: "tf", q: "Computers do not need instructions to perform useful work.", opts: ["True", "False"], ans: 1, exp_en: "False. They only perform tasks according to provided instructions.", exp_ar: "خطأ. هم فقط يؤدون المهام وفقاً للتعليمات المقدمة." },
+        { type: "mcq", q: "Which component coordinates the execution of instructions in a computer?", opts: ["ALU", "Control Unit", "Registers", "RAM"], ans: 1, exp_en: "The Control Unit coordinates the execution of instructions.", exp_ar: "وحدة التحكم تنسق تنفيذ التعليمات." },
+        { type: "mcq", q: "Which unit handles logical operations like AND, OR, NOT?", opts: ["Control Unit", "ALU", "Cache", "Program Counter"], ans: 1, exp_en: "The ALU performs logical operations as well as arithmetic ones.", exp_ar: "وحدة الحساب والمنطق تقوم بالعمليات المنطقية بالإضافة إلى الحسابية." },
+        { type: "mcq", q: "What does MAR stand for?", opts: ["Memory Access Register", "Memory Address Register", "Main Address Register", "Memory Allocation Register"], ans: 1, exp_en: "MAR stands for Memory Address Register.", exp_ar: "MAR تعني سجل عنوان الذاكرة." },
+        { type: "tf", q: "The clock signal synchronizes the internal activities of the CPU.", opts: ["True", "False"], ans: 0, exp_en: "True. The clock provides timing signals for synchronization.", exp_ar: "صحيح. الساعة توفر إشارات توقيت للمزامنة." },
+        { type: "mcq", q: "During which instruction cycle stage does the CU interpret the instruction?", opts: ["Fetch", "Decode", "Execute", "Write Back"], ans: 1, exp_en: "During Decode, the CU interprets the instruction.", exp_ar: "أثناء فك التشفير، تفسر وحدة التحكم التعليمة." },
+        { type: "mcq", q: "Where are results stored during the 'Write Back' stage?", opts: ["In the Hard Drive", "In a CPU Register", "In the Monitor", "In the Cache only"], ans: 1, exp_en: "The result is stored in the appropriate destination, such as a CPU register.", exp_ar: "يتم تخزين النتيجة في الوجهة المناسبة، مثل سجل المعالج." },
+        { type: "mcq", q: "What is the main difference between a Clock Cycle and an Instruction Cycle?", opts: ["They are exactly the same", "Clock cycle is for memory, Instruction cycle is for CPU", "An instruction cycle may require one or more clock cycles", "Clock cycle is longer"], ans: 2, exp_en: "An instruction may require one or more clock cycles to complete.", exp_ar: "قد تتطلب التعليمة دورة ساعة واحدة أو أكثر لإكمالها." },
+        { type: "tf", q: "RAM allows the processor to directly access any memory location without reading preceding locations.", opts: ["True", "False"], ans: 0, exp_en: "True. This is the 'Random Access' feature of RAM.", exp_ar: "صحيح. هذه هي ميزة 'الوصول العشوائي' في الرام." },
+        { type: "mcq", q: "Which of the following is a characteristic of RAM?", opts: ["Non-volatile", "Volatile", "Stores firmware", "Permanent storage"], ans: 1, exp_en: "RAM is volatile; its contents are lost when power is turned off.", exp_ar: "الرام متطايرة؛ يتم فقدان محتوياتها عند إيقاف التشغيل." },
+        { type: "mcq", q: "Which type of ROM can be programmed or updated under specific conditions?", opts: ["PROM", "EEPROM and Flash memory", "Standard ROM", "Hardwired ROM"], ans: 1, exp_en: "EEPROM and Flash memory can be updated under specific conditions.", exp_ar: "EEPROM وذاكرة الفلاش يمكن تحديثها في ظروف محددة." },
+        { type: "mcq", q: "Which of the following is an optical disk?", opts: ["HDD", "SSD", "DVD", "USB Flash Drive"], ans: 2, exp_en: "DVD is an optical disk read by laser.", exp_ar: "الـ DVD هو قرص ضوئي يقرأ بالليزر." },
+        { type: "tf", q: "Secondary storage is generally faster than primary memory.", opts: ["True", "False"], ans: 1, exp_en: "False. Secondary storage is generally slower than primary memory.", exp_ar: "خطأ. التخزين الثانوي عادة أبطأ من الذاكرة الرئيسية." },
+        { type: "mcq", q: "What does a single-layer Blu-ray disc hold?", opts: ["700 MB", "4.7 GB", "25 GB", "50 GB"], ans: 2, exp_en: "A single-layer Blu-ray disc holds approximately 25 GB.", exp_ar: "قرص Blu-ray أحادي الطبقة يحمل حوالي 25 جيجابايت." },
+        { type: "mcq", q: "Which of the following is NOT a characteristic of a computer?", opts: ["Speed", "Diligence", "Emotional intelligence", "Storage Capacity"], ans: 2, exp_en: "Computers do not have emotional intelligence; that is a human trait.", exp_ar: "أجهزة الكمبيوتر لا تمتلك ذكاءً عاطفياً؛ هذه صفة بشرية." },
+        { type: "mcq", q: "What is the primary function of the CPU's Control Unit?", opts: ["Perform math", "Store data permanently", "Coordinate and control execution", "Display graphics"], ans: 2, exp_en: "The CU coordinates and controls activities involved in executing instructions.", exp_ar: "وحدة التحكم تنسق وتتحكم في الأنشطة المتعلقة بتنفيذ التعليمات." },
+        { type: "mcq", q: "Which register acts as a buffer for data going to or from memory?", opts: ["PC", "MAR", "MDR", "ACC"], ans: 2, exp_en: "MDR is a buffer for data/instructions going to or from memory.", exp_ar: "MDR هو بمثابة مخزن مؤقت للبيانات/التعليمات المتجهة من أو إلى الذاكرة." },
+        { type: "tf", q: "Cache memory is larger but slower than main memory (RAM).", opts: ["True", "False"], ans: 1, exp_en: "False. Cache is smaller and much faster than RAM.", exp_ar: "خطأ. الكاش أصغر وأسرع بكثير من الرام." },
+        { type: "mcq", q: "In a 4-stage instruction cycle, what happens immediately after 'Decode'?", opts: ["Fetch", "Execute", "Write Back", "Store"], ans: 1, exp_en: "After Decode, the Execute stage takes place.", exp_ar: "بعد فك التشفير، تحدث مرحلة التنفيذ." },
+        { type: "mcq", q: "Which of the following is a secondary storage device?", opts: ["Cache", "RAM", "ROM", "USB Flash Drive"], ans: 3, exp_en: "USB Flash Drive is a secondary storage device.", exp_ar: "محرك أقراص USB المحمول هو جهاز تخزين ثانوي." },
+        { type: "tf", q: "HDDs are generally more resistant to physical shock than SSDs.", opts: ["True", "False"], ans: 1, exp_en: "False. SSDs have no moving parts and are more shock-resistant.", exp_ar: "خطأ. الـ SSD ليس به أجزاء متحركة وهو أكثر مقاومة للصدمات." },
+        { type: "mcq", q: "What does the acronym IPC stand for in CPU performance?", opts: ["Internal Processor Cache", "Instructions Per Cycle", "Integrated Processing Chip", "Intelligent Power Control"], ans: 1, exp_en: "IPC stands for Instructions Per Cycle, a key performance factor.", exp_ar: "IPC تعني التعليمات في الدورة، وهو عامل أداء رئيسي." },
+        { type: "mcq", q: "What is the purpose of Pipelining?", opts: ["To reduce the clock speed", "To improve instruction throughput", "To increase hard drive space", "To cool the CPU"], ans: 1, exp_en: "Pipelining improves instruction throughput by overlapping stages.", exp_ar: "تقنية التدفق تحسن إنتاجية التعليمات من خلال تداخل المراحل." },
+        { type: "mcq", q: "Which memory type is directly accessed by the CPU during normal processing?", opts: ["Secondary Storage", "Primary Memory", "Optical Disks", "External HDD"], ans: 1, exp_en: "Primary memory is directly accessed by the CPU.", exp_ar: "يتم الوصول إلى الذاكرة الرئيسية مباشرة من قبل وحدة المعالجة المركزية." },
+        { type: "tf", q: "Flash memory is an example of volatile memory.", opts: ["True", "False"], ans: 1, exp_en: "False. Flash memory (like in SSDs) is non-volatile.", exp_ar: "خطأ. ذاكرة الفلاش (مثل تلك الموجودة في الـ SSD) غير متطايرة." },
+        { type: "mcq", q: "What happens when a computer loses power to its RAM?", opts: ["Data is saved to HDD", "Data is transferred to ROM", "Data is lost", "Data becomes permanent"], ans: 2, exp_en: "RAM is volatile, so contents are lost when power is off.", exp_ar: "الرام متطايرة، لذلك يتم فقدان المحتويات عند إيقاف التشغيل." },
+        { type: "mcq", q: "Which component directs the ALU to perform a specific operation?", opts: ["The RAM", "The Control Unit", "The Monitor", "The Hard Drive"], ans: 1, exp_en: "The Control Unit sends control signals to the ALU.", exp_ar: "وحدة التحكم ترسل إشارات تحكم إلى وحدة الحساب والمنطق." },
+        { type: "mcq", q: "Which of these is a logical operation?", opts: ["Addition", "Division", "AND", "Subtraction"], ans: 2, exp_en: "AND is a logical operation, while the others are arithmetic.", exp_ar: "AND هي عملية منطقية، بينما الأخرى حسابية." },
+        { type: "mcq", q: "What is the relationship between HDD and SSD cost per GB?", opts: ["HDD is more expensive", "SSD is more expensive", "They cost the same", "Cost is unrelated to storage type"], ans: 1, exp_en: "SSDs generally cost more per GB than HDDs.", exp_ar: "الـ SSD عادة يكلف أكثر لكل جيجابايت من الـ HDD." },
+        { type: "mcq", q: "Which of the following is a stage of the instruction cycle?", opts: ["Save", "Write Back", "Load", "Boot"], ans: 1, exp_en: "The stages are Fetch, Decode, Execute, Write Back.", exp_ar: "المراحل هي الجلب، فك التشفير، التنفيذ، الكتابة مرة أخرى." },
+        { type: "tf", q: "A computer's results depend solely on the hardware used.", opts: ["True", "False"], ans: 1, exp_en: "False. Results depend on instructions, data, software, and system design.", exp_ar: "خطأ. النتائج تعتمد على التعليمات، البيانات، البرمجيات، وتصميم النظام." },
+        { type: "mcq", q: "Which type of software is stored in ROM?", opts: ["Word Processors", "Web Browsers", "Firmware", "Games"], ans: 2, exp_en: "ROM commonly stores firmware and boot instructions.", exp_ar: "الروم عادة تخزن الفيرموير وتعليمات التمهيد." },
+        { type: "mcq", q: "What does the Program Counter (PC) do after an instruction is fetched?", opts: ["It deletes the instruction", "It updates to point to the next instruction", "It sends data to the ALU", "It clears the RAM"], ans: 1, exp_en: "The PC is updated to point to the next instruction's address.", exp_ar: "يتم تحديث عداد البرنامج ليشير إلى عنوان التعليمة التالية." },
+        { type: "mcq", q: "Which storage device uses a blue-violet laser?", opts: ["CD", "DVD", "Blu-ray", "HDD"], ans: 2, exp_en: "Blu-ray discs use a blue-violet laser for higher capacity.", exp_ar: "أقراص Blu-ray تستخدم ليزر أزرق-بنفسجي لسعة أعلى." },
+        { type: "tf", q: "Multitasking means the computer can perform many tasks at the same time.", opts: ["True", "False"], ans: 0, exp_en: "True. Multitasking is one of the 8 core characteristics.", exp_ar: "صحيح. تعدد المهام هو أحد الخصائص الأساسية الثمانية." },
+        { type: "mcq", q: "Where are registers located?", opts: ["On the hard drive", "Inside the CPU", "In the RAM", "On the motherboard outside CPU"], ans: 1, exp_en: "Registers are storage locations located inside the CPU.", exp_ar: "السجلات هي مواقع تخزين موجودة داخل وحدة المعالجة المركزية." }
+    ];
+
+    // --- STATE & LOCAL STORAGE ---
+    let state = {
+        currentPart: 0,
+        reviewedFlashcards: [],
+        currentCardIndex: 0,
+        examScore: 0,
+        examAnswers: [],
+        currentQuestionIndex: 0,
+        isExamActive: false
+    };
+
+    function loadState() {
+        const saved = localStorage.getItem('computingStudyState');
+        if (saved) {
+            state = JSON.parse(saved);
+        }
+        updateDashboard();
+    }
+
+    function saveState() {
+        localStorage.setItem('computingStudyState', JSON.stringify(state));
+        updateDashboard();
+    }
+
+    // --- UI NAVIGATION ---
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (id === 'study') renderStudy();
+        if (id === 'flashcards') renderFlashcard();
+        if (id === 'summary') renderSummary();
+        if (id === 'exam' && !state.isExamActive) startExam();
+        if (id === 'dashboard') updateDashboard();
+    }
+
+    function toggleTheme() {
+        document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+
+    // --- DASHBOARD ---
+    function updateDashboard() {
+        const totalParts = studyData.length;
+        const partsStudied = state.currentPart + 1; 
+        const progress = Math.round((state.currentPart / (totalParts - 1)) * 100);
+        
+        document.getElementById('dash-progress-text').innerText = `${progress}%`;
+        document.getElementById('dash-parts-text').innerText = `${partsStudied} / ${totalParts}`;
+        document.getElementById('dash-flash-text').innerText = `${state.reviewedFlashcards.length} / ${flashcardsData.length}`;
+        
+        if (state.examScore > 0 || state.examAnswers.length === 60) {
+            document.getElementById('dash-exam-text').innerText = `${state.examScore} / 60`;
+        } else {
+            document.getElementById('dash-exam-text').innerText = `--`;
+        }
+
+        document.getElementById('dash-progress-bar').style.width = `${progress}%`;
+    }
+
+    function continueLearning() {
+        showSection('study');
+        // Highlight nav
+        document.querySelectorAll('.nav-item')[1].classList.add('active');
+    }
+
+    // --- STUDY SECTION ---
+    function renderStudy() {
+        const part = studyData[state.currentPart];
+        document.getElementById('part-indicator').innerText = `Part ${state.currentPart + 1} of ${studyData.length}`;
+        document.getElementById('study-title').innerText = part.title;
+        document.getElementById('study-original').innerText = part.original;
+        document.getElementById('study-translation').innerText = part.translation;
+        document.getElementById('study-explanation').innerText = part.explanation;
+
+        document.getElementById('btn-prev-part').disabled = state.currentPart === 0;
+        document.getElementById('btn-next-part').disabled = state.currentPart === studyData.length - 1;
+    }
+
+    function changePart(dir) {
+        state.currentPart += dir;
+        if (state.currentPart < 0) state.currentPart = 0;
+        if (state.currentPart >= studyData.length) state.currentPart = studyData.length - 1;
+        
+        renderStudy();
+        saveState();
+    }
+
+    // --- FLASHCARDS ---
+    function renderFlashcard() {
+        if(state.reviewedFlashcards.length === flashcardsData.length) {
+             // All reviewed
+        }
+
+        const card = flashcardsData[state.currentCardIndex];
+        document.getElementById('flash-indicator').innerText = `Card ${state.currentCardIndex + 1} of ${flashcardsData.length}`;
+        document.getElementById('flash-question').innerText = card.q;
+        document.getElementById('flash-answer-en').innerText = card.a_en;
+        document.getElementById('flash-answer-ar').innerText = card.a_ar;
+        document.getElementById('flashcard').classList.remove('flipped');
+    }
+
+    function flipCard() {
+        document.getElementById('flashcard').classList.toggle('flipped');
+    }
+
+    function changeCard(dir) {
+        state.currentCardIndex += dir;
+        if (state.currentCardIndex < 0) state.currentCardIndex = 0;
+        if (state.currentCardIndex >= flashcardsData.length) state.currentCardIndex = flashcardsData.length - 1;
+        renderFlashcard();
+    }
+
+    function shuffleCards() {
+        state.currentCardIndex = Math.floor(Math.random() * flashcardsData.length);
+        renderFlashcard();
+    }
+
+    function markReviewed() {
+        if (!state.reviewedFlashcards.includes(state.currentCardIndex)) {
+            state.reviewedFlashcards.push(state.currentCardIndex);
+            saveState();
+            alert("Card marked as reviewed!");
+        } else {
+            alert("Already reviewed.");
+        }
+    }
+
+    // --- SUMMARY ---
+    function renderSummary() {
+        const container = document.getElementById('summary-list');
+        container.innerHTML = '';
+        summaryData.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'summary-item';
+            li.innerHTML = `
+                <div><strong>${index + 1}.</strong> ${item.en}</div>
+                <div class="arabic-text"><strong>${index + 1}.</strong> ${item.ar}</div>
+            `;
+            container.appendChild(li);
+        });
+    }
+
+    // --- EXAM ---
+    function startExam() {
+        state.isExamActive = true;
+        state.currentQuestionIndex = 0;
+        state.examScore = 0;
+        state.examAnswers = new Array(examData.length).fill(null);
+        document.getElementById('exam-progress-text').innerText = `Question 1 of ${examData.length}`;
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const qData = examData[state.currentQuestionIndex];
+        document.getElementById('exam-progress-text').innerText = `Question ${state.currentQuestionIndex + 1} of ${examData.length}`;
+        document.getElementById('exam-question').innerText = qData.q;
+        document.getElementById('exam-question-ar').innerText = ""; // Optional: Add translation here if needed
+        
+        const optionsContainer = document.getElementById('exam-options');
+        optionsContainer.innerHTML = '';
+
+        qData.opts.forEach((opt, index) => {
+            const li = document.createElement('li');
+            li.className = 'option-item';
+            li.innerText = opt;
+            li.onclick = () => selectOption(index, li);
+            optionsContainer.appendChild(li);
+        });
+
+        // Reset UI
+        document.getElementById('btn-confirm').style.display = 'inline-block';
+        document.getElementById('btn-next-q').style.display = 'none';
+        document.getElementById('exam-feedback').style.display = 'none';
+        document.querySelectorAll('.option-item').forEach(el => {
+            el.classList.remove('selected', 'correct', 'wrong');
+        });
+        
+        // Restore selection if revisited
+        if (state.examAnswers[state.currentQuestionIndex] !== null) {
+            const selectedIndex = state.examAnswers[state.currentQuestionIndex];
+            optionsContainer.children[selectedIndex].classList.add('selected');
+        }
+    }
+
+    let currentSelection = null;
+
+    function selectOption(index, element) {
+        if (document.getElementById('btn-confirm').style.display === 'none') return; // Already confirmed
+        
+        currentSelection = index;
+        document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    function confirmAnswer() {
+        if (currentSelection === null) {
+            alert("Please select an option first.");
+            return;
+        }
+
+        const qData = examData[state.currentQuestionIndex];
+        const isCorrect = currentSelection === qData.ans;
+        
+        state.examAnswers[state.currentQuestionIndex] = currentSelection;
+        if (isCorrect) state.examScore++;
+
+        // Highlight correct/wrong
+        const options = document.querySelectorAll('.option-item');
+        options[qData.ans].classList.add('correct');
+        if (!isCorrect) {
+            options[currentSelection].classList.add('wrong');
+        }
+
+        // Show Feedback
+        const feedbackBox = document.getElementById('exam-feedback');
+        feedbackBox.style.display = 'block';
+        feedbackBox.className = `feedback-box ${isCorrect ? 'success' : 'error'}`;
+        document.getElementById('feedback-title').innerText = isCorrect ? "Correct!" : "Incorrect!";
+        document.getElementById('feedback-explanation-en').innerText = qData.exp_en;
+        document.getElementById('feedback-explanation-ar').innerText = qData.exp_ar;
+
+        // Change buttons
+        document.getElementById('btn-confirm').style.display = 'none';
+        document.getElementById('btn-next-q').style.display = 'inline-block';
+        
+        // Save state
+        saveState();
+    }
+
+    function nextQuestion() {
+        currentSelection = null;
+        if (state.currentQuestionIndex < examData.length - 1) {
+            state.currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            finishExam();
+        }
+    }
+
+    function finishExam() {
+        state.isExamActive = false;
+        saveState();
+        
+        // Show Results
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('results').classList.add('active');
+        
+        const total = examData.length;
+        const percentage = Math.round((state.examScore / total) * 100);
+        
+        document.getElementById('result-score').innerText = `${state.examScore} / ${total}`;
+        document.getElementById('result-percentage').innerText = `${percentage}%`;
+        document.getElementById('result-breakdown').innerText = `Correct: ${state.examScore} | Wrong: ${total - state.examScore}`;
+        
+        let status = "";
+        if (percentage >= 90) status = "Excellent! You've mastered this chapter.";
+        else if (percentage >= 75) status = "Very Good! A little review and you're perfect.";
+        else if (percentage >= 50) status = "Good effort, but review the study parts and flashcards.";
+        else status = "Keep going! You need to review the chapter thoroughly.";
+        
+        document.getElementById('result-status').innerText = status;
+        document.getElementById('review-section').style.display = 'none';
+    }
+
+    function reviewWrongAnswers() {
+        const reviewContainer = document.getElementById('wrong-answers-list');
+        reviewContainer.innerHTML = '';
+        let wrongCount = 0;
+
+        examData.forEach((q, index) => {
+            if (state.examAnswers[index] !== q.ans) {
+                wrongCount++;
+                const div = document.createElement('div');
+                div.className = 'question-card';
+                div.innerHTML = `
+                    <h4>Q${index + 1}: ${q.q}</h4>
+                    <p style="color: var(--accent-color); margin-top: 10px;">Your answer: ${q.opts[state.examAnswers[index]] || "Not answered"}</p>
+                    <p style="color: var(--success-color);">Correct answer: ${q.opts[q.ans]}</p>
+                    <p style="margin-top: 10px;"><strong>Explanation:</strong> ${q.exp_en}</p>
+                    <p class="arabic-text"><strong>الشرح:</strong> ${q.exp_ar}</p>
+                `;
+                reviewContainer.appendChild(div);
+            }
+        });
+
+        if (wrongCount === 0) {
+            reviewContainer.innerHTML = `<p>No wrong answers! Perfect score!</p>`;
+        }
+
+        document.getElementById('review-section').style.display = 'block';
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function restartExam() {
+        startExam();
+        showSection('exam');
+        document.querySelectorAll('.nav-item')[4].classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // --- INIT ---
+    window.onload = () => {
+        loadState();
+        // Set default theme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.dataset.theme = 'dark';
+        }
+    };
+
+</script>
+</body>
+</html>
